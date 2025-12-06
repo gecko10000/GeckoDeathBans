@@ -16,6 +16,7 @@ import kotlin.time.toJavaDuration
 
 class BanManager : MyKoinComponent {
 
+    private val plugin: GeckoDeathBans by inject()
     private val worldDeathBanStorage: WorldDeathBanStorage by inject()
 
     private val libertyBans: LibertyBans = OmnibusProvider
@@ -25,8 +26,9 @@ class BanManager : MyKoinComponent {
     private val plainTextComponentSerializer = PlainTextComponentSerializer.plainText()
 
     fun banPlayer(player: Player, banDuration: Duration, deathEvent: PlayerDeathEvent?) {
-        val reason = deathEvent?.deathMessage()?.let { plainTextComponentSerializer.serialize(it) }
+        val cause = deathEvent?.deathMessage()?.let { plainTextComponentSerializer.serialize(it) }
             ?: "No one knows how you died. Congrats!"
+        val reason = plugin.config.banMessage.replace("<cause>", cause)
         val draftBan = libertyBans.drafter.draftBuilder()
             .type(PunishmentType.BAN)
             .victim(PlayerVictim.of(player.uniqueId))
