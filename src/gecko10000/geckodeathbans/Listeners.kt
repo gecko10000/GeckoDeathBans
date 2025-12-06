@@ -29,6 +29,7 @@ class Listeners : Listener, MyKoinComponent {
         banStepTracker.setBanStep(player, nextBanStep)
         val banDuration = plugin.config.banTimes[actualBanStep]
         banManager.banPlayer(player, banDuration, this)
+        player.spigot().respawn()
     }
 
     @EventHandler

@@ -59,6 +59,13 @@ public class CommandHandler {
     @Permission("geckodeathbans.command.set_deathban_flag")
     void setDeathbanFlag(CommandSender sender, PlayerProfile profile) {
         internalCommandHandler.setDeathbanFlag(profile);
+        sender.sendRichMessage("<green>Set flag.");
+    }
+
+    @Executes("unban_all")
+    @Permission("geckodeathbans.command.unban_all")
+    void unbanAll(CommandSender sender) {
+        internalCommandHandler.unbanAll(sender);
     }
 
 }

@@ -63,5 +63,13 @@ class InternalCommandHandler : MyKoinComponent {
         }
     }
 
+    protected fun unbanAll(sender: CommandSender) {
+        val allBans = worldDeathBanStorage.getAllDeathBans()
+        allBans.forEach {
+            banManager.unbanByUUID(it)
+            worldDeathBanStorage.removeDeathBan(it)
+        }
+        plugin.server.broadcast(plugin.config.unbanAllBroadcast(allBans.size))
+    }
 
 }

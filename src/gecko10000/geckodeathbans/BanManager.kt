@@ -57,4 +57,8 @@ class BanManager : MyKoinComponent {
             }
     }
 
+    fun unbanByUUID(uuid: UUID) = libertyBans.revoker
+        .revokeByTypeAndVictim(PunishmentType.BAN, PlayerVictim.of(uuid))
+        .undoPunishment()
+
 }

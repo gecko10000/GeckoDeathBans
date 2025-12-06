@@ -28,4 +28,12 @@ class WorldDeathBanStorage : MyKoinComponent {
         database.remove(keyForPlayer(uuid))
     }
 
+    fun getAllDeathBans(): Set<UUID> {
+        return database.keys
+            .filter { it.namespace() == plugin.namespace() }
+            .map { it.value() }
+            .map { UUID.fromString(it) }
+            .toSet()
+    }
+
 }
