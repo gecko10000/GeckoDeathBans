@@ -20,6 +20,10 @@ class Listeners : Listener, MyKoinComponent {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private fun PlayerDeathEvent.onPlayerDeath() {
+        player.spigot().respawn()
+        if (player.hasPermission("geckodeathbans.bypass")) {
+            return
+        }
         val lastBanStep = plugin.config.banTimes.size - 1
         val storedBanStep = banStepTracker.getBanStep(player)
         val actualBanStep = min(storedBanStep, lastBanStep)
@@ -27,7 +31,6 @@ class Listeners : Listener, MyKoinComponent {
         banStepTracker.setBanStep(player, nextBanStep)
         val banDuration = plugin.config.banTimes[actualBanStep]
         banManager.banPlayer(player, banDuration, this)
-        player.spigot().respawn()
     }
 
 }
