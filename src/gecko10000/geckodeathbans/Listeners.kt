@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.koin.core.component.inject
 import kotlin.math.min
 
@@ -14,7 +13,6 @@ class Listeners : Listener, MyKoinComponent {
     private val plugin: GeckoDeathBans by inject()
     private val banStepTracker: BanStepTracker by inject()
     private val banManager: BanManager by inject()
-    private val worldDeathBanStorage: WorldDeathBanStorage by inject()
 
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
@@ -30,11 +28,6 @@ class Listeners : Listener, MyKoinComponent {
         val banDuration = plugin.config.banTimes[actualBanStep]
         banManager.banPlayer(player, banDuration, this)
         player.spigot().respawn()
-    }
-
-    @EventHandler
-    private fun PlayerBucketEmptyEvent.onBucketEmpty() {
-        banStepTracker.setBanStep(player, 0)
     }
 
 }
