@@ -3,10 +3,7 @@ package gecko10000.geckodeathbans.commands;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import gecko10000.geckodeathbans.GeckoDeathBans;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import net.strokkur.commands.annotations.Aliases;
-import net.strokkur.commands.annotations.Command;
-import net.strokkur.commands.annotations.Executes;
-import net.strokkur.commands.annotations.Permission;
+import net.strokkur.commands.annotations.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,6 +63,18 @@ public class CommandHandler {
     @Permission("geckodeathbans.command.unban_all")
     void unbanAll(CommandSender sender) {
         internalCommandHandler.unbanAll(sender);
+    }
+
+    @Executes("set_totem_item")
+    @Permission("geckodeathbans.command.set_totem_item")
+    void setTotemItem(CommandSender sender, @Executor Player player) {
+        internalCommandHandler.setTotemItem(player);
+    }
+
+    @Executes("give_totem_item")
+    @Permission("geckodeathbans.command.give_totem_item")
+    void giveTotemItem(CommandSender sender, Player target) {
+        internalCommandHandler.giveTotemItem(sender, target);
     }
 
 }

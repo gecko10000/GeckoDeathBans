@@ -27,4 +27,8 @@ class GeckoDeathBans : JavaPlugin() {
         configFile.reload()
     }
 
+    fun saveConfigs() {
+        configFile.save()
+    }
+
 }

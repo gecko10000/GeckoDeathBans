@@ -1,10 +1,7 @@
 package gecko10000.geckodeathbans.commands
 
 import com.destroystokyo.paper.profile.PlayerProfile
-import gecko10000.geckodeathbans.BanManager
-import gecko10000.geckodeathbans.BanStepTracker
-import gecko10000.geckodeathbans.GeckoDeathBans
-import gecko10000.geckodeathbans.WorldDeathBanStorage
+import gecko10000.geckodeathbans.*
 import gecko10000.geckodeathbans.di.MyKoinComponent
 import gecko10000.geckolib.extensions.MM
 import gecko10000.geckolib.misc.Task
@@ -22,6 +19,7 @@ class InternalCommandHandler : MyKoinComponent {
     private val banStepTracker: BanStepTracker by inject()
     private val banManager: BanManager by inject()
     private val worldDeathBanStorage: WorldDeathBanStorage by inject()
+    private val respawnTotemManager: RespawnTotemManager by inject()
 
     protected fun setBanStep(target: Player, step: Int) {
         banStepTracker.setBanStep(target, step)
@@ -70,6 +68,31 @@ class InternalCommandHandler : MyKoinComponent {
             worldDeathBanStorage.removeDeathBan(it)
         }
         plugin.server.broadcast(plugin.config.unbanAllBroadcast(allBans.size))
+    }
+
+    protected fun setTotemItem(player: Player) {
+        val item = player.inventory.itemInMainHand
+        if (item.isEmpty) {
+            player.sendRichMessage("<red>Hold an item to do this.")
+            return
+        }
+        respawnTotemManager.setTotemItem(item)
+        player.sendMessage(
+            MM.deserialize(
+                "<green>Set the totem item to <item>",
+                Placeholder.component("item", item.effectiveName().hoverEvent(item.asHoverEvent()))
+            )
+        )
+    }
+
+    protected fun giveTotemItem(sender: CommandSender, target: Player) {
+        target.give(respawnTotemManager.getTotemItem())
+        sender.sendMessage(
+            MM.deserialize(
+                "<green>Gave <player> a respawn totem.",
+                Placeholder.unparsed("player", target.name)
+            )
+        )
     }
 
 }
