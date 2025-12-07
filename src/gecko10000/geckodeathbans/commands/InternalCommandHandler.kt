@@ -85,12 +85,14 @@ class InternalCommandHandler : MyKoinComponent {
         )
     }
 
-    protected fun giveTotemItem(sender: CommandSender, target: Player) {
-        target.give(respawnTotemManager.getTotemItem())
+    protected fun giveTotemItem(sender: CommandSender, target: Player, amount: Int) {
+        target.give(IntRange(1, amount).map { respawnTotemManager.getTotemItem() })
         sender.sendMessage(
             MM.deserialize(
-                "<green>Gave <player> a respawn totem.",
-                Placeholder.unparsed("player", target.name)
+                "<green>Gave <player> <amount> respawn totem<s>.",
+                Placeholder.unparsed("player", target.name),
+                Placeholder.unparsed("amount", amount.toString()),
+                Placeholder.unparsed("s", if (amount == 1) "" else "s")
             )
         )
     }

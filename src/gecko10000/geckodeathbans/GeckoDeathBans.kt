@@ -1,6 +1,7 @@
 package gecko10000.geckodeathbans
 
 import gecko10000.geckodeathbans.commands.CommandHandler
+import gecko10000.geckodeathbans.commands.InternalCommandHandler
 import gecko10000.geckodeathbans.config.Config
 import gecko10000.geckodeathbans.di.MyKoinContext
 import gecko10000.geckolib.config.YamlFileManager
@@ -16,6 +17,9 @@ class GeckoDeathBans : JavaPlugin() {
 
     val config: Config
         get() = configFile.value
+
+
+    val internalCommandHandler = InternalCommandHandler()
 
     override fun onEnable() {
         MyKoinContext.init(this)
