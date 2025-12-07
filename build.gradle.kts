@@ -24,15 +24,15 @@ bukkit {
     name = "GeckoDeathBans"
     main = "$group.$name"
     apiVersion = "1.13"
-    depend = listOf("GeckoLib", "LibertyBans", "CMI")
+    depend = listOf("GeckoLib", "LibertyBans", "CMI", "PlaceholderAPI")
 }
 
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://eldonexus.de/repository/maven-public/")
     maven("https://jitpack.io")
+    maven("https://repo.extendedclip.com/releases/")
 
     maven("https://mvn-repo.arim.space/lesser-gpl3/")
     maven("https://mvn-repo.arim.space/gpl3/")
@@ -49,6 +49,7 @@ dependencies {
 
     compileOnly("space.arim.libertybans:bans-api:1.1.2")
     compileOnly("com.github.Zrips:CMI-API:9.7.14.3")
+    compileOnly("me.clip:placeholderapi:2.11.7")
 }
 
 kotlin {

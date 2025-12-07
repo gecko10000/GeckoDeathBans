@@ -16,6 +16,7 @@ class BanManager : MyKoinComponent {
 
     private val plugin: GeckoDeathBans by inject()
     private val worldDeathBanStorage: WorldDeathBanStorage by inject()
+    private val kdCountManager: KDCountManager by inject()
 
     private val libertyBans: LibertyBans = OmnibusProvider
         .getOmnibus().registry
@@ -24,6 +25,7 @@ class BanManager : MyKoinComponent {
 
     fun banPlayer(player: Player, banDuration: Duration, banCause: String?) {
         plugin.server.broadcast(plugin.config.deathBanBroadcast(player.name, banDuration))
+        kdCountManager.incrementStats(player)
         val cause = banCause
             ?: "No one knows how you died. Congrats!"
         val reason = plugin.config.banMessage.replace("<cause>", cause)

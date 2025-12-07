@@ -12,4 +12,5 @@ fun pluginModules(plugin: GeckoDeathBans) = module {
     single(createdAtStart = true) { RespawnTotemManager() }
     single(createdAtStart = true) { CombatLogManager() }
     single { PlainTextComponentSerializer.plainText() }
+    single(createdAtStart = true) { KDCountManager() }
 }

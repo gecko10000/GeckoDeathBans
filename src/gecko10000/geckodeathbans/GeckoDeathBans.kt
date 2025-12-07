@@ -21,6 +21,7 @@ class GeckoDeathBans : JavaPlugin() {
         MyKoinContext.init(this)
         Listeners()
         CommandHandler().register()
+        PAPIExpansion()
     }
 
     fun reloadConfigs() {
