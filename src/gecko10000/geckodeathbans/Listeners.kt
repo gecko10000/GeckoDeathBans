@@ -3,6 +3,8 @@ package gecko10000.geckodeathbans
 import gecko10000.geckodeathbans.di.MyKoinComponent
 import gecko10000.geckolib.misc.Task
 import org.bukkit.EntityEffect
+import org.bukkit.GameRule
+import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -10,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityResurrectEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.world.WorldLoadEvent
 import org.koin.core.component.inject
 import java.util.*
 import kotlin.math.min
@@ -26,6 +29,16 @@ class Listeners : Listener, MyKoinComponent {
 
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
+        plugin.server.worlds.forEach(::fixWorldGamerules)
+    }
+
+    @EventHandler
+    private fun WorldLoadEvent.onWorldLoad() {
+        fixWorldGamerules(world)
+    }
+
+    private fun fixWorldGamerules(world: World) {
+        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
     }
 
     /**
@@ -53,7 +66,6 @@ class Listeners : Listener, MyKoinComponent {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private fun PlayerDeathEvent.onPlayerDeath() {
-        player.spigot().respawn()
         if (player.hasPermission("geckodeathbans.bypass")) {
             return
         }
