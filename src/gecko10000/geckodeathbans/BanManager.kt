@@ -15,7 +15,7 @@ import kotlin.time.toJavaDuration
 class BanManager : MyKoinComponent {
 
     private val plugin: GeckoDeathBans by inject()
-    private val worldDeathBanStorage: WorldDeathBanStorage by inject()
+    private val deathBanStorage: DeathBanStorage by inject()
     private val kdCountManager: KDCountManager by inject()
 
     private val libertyBans: LibertyBans = OmnibusProvider
@@ -36,7 +36,7 @@ class BanManager : MyKoinComponent {
             .duration(banDuration.toJavaDuration())
             .build()
         draftBan.enactPunishment()
-        worldDeathBanStorage.storeDeathBan(player.uniqueId)
+        deathBanStorage.storeDeathBan(player.uniqueId)
     }
 
     fun unbanPlayer(username: String): CentralisedFuture<Boolean> {
@@ -51,7 +51,7 @@ class BanManager : MyKoinComponent {
                     .undoPunishment()
             }.thenApply { success ->
                 if (success) {
-                    worldDeathBanStorage.removeDeathBan(sharedUUID)
+                    deathBanStorage.removeDeathBan(sharedUUID)
                 }
                 return@thenApply success
             }

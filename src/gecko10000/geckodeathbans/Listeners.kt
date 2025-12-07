@@ -22,7 +22,7 @@ class Listeners : Listener, MyKoinComponent {
     private val plugin: GeckoDeathBans by inject()
     private val banStepTracker: BanStepTracker by inject()
     private val banManager: BanManager by inject()
-    private val worldDeathBanStorage: WorldDeathBanStorage by inject()
+    private val deathBanStorage: DeathBanStorage by inject()
     private val respawnTotemManager: RespawnTotemManager by inject()
     private val combatLogManager: CombatLogManager by inject()
     private val plainTextComponentSerializer: PlainTextComponentSerializer by inject()
@@ -48,7 +48,7 @@ class Listeners : Listener, MyKoinComponent {
      */
     @EventHandler
     private fun PlayerJoinEvent.onPlayerJoin() {
-        worldDeathBanStorage.removeDeathBan(player.uniqueId)
+        deathBanStorage.removeDeathBan(player.uniqueId)
     }
 
     @EventHandler(ignoreCancelled = true)

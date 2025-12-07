@@ -18,7 +18,7 @@ class InternalCommandHandler : MyKoinComponent {
     private val plugin: GeckoDeathBans by inject()
     private val banStepTracker: BanStepTracker by inject()
     private val banManager: BanManager by inject()
-    private val worldDeathBanStorage: WorldDeathBanStorage by inject()
+    private val deathBanStorage: DeathBanStorage by inject()
     private val respawnTotemManager: RespawnTotemManager by inject()
 
     protected fun setBanStep(target: Player, step: Int) {
@@ -30,7 +30,7 @@ class InternalCommandHandler : MyKoinComponent {
             profile.complete(false)
             Task.syncDelayed { ->
                 val username = profile.name!!
-                if (!worldDeathBanStorage.isDeathBan(profile.id!!)) {
+                if (!deathBanStorage.isDeathBan(profile.id!!)) {
                     sender.sendMessage(
                         MM.deserialize(
                             "<red>Player <player> is not death banned.",
@@ -57,15 +57,15 @@ class InternalCommandHandler : MyKoinComponent {
         CoroutineScope(Dispatchers.IO).launch {
             profile.complete(false)
             val uuid = profile.id!!
-            Task.syncDelayed { -> worldDeathBanStorage.storeDeathBan(uuid) }
+            Task.syncDelayed { -> deathBanStorage.storeDeathBan(uuid) }
         }
     }
 
     protected fun unbanAll(sender: CommandSender) {
-        val allBans = worldDeathBanStorage.getAllDeathBans()
+        val allBans = deathBanStorage.getAllDeathBans()
         allBans.forEach {
             banManager.unbanByUUID(it)
-            worldDeathBanStorage.removeDeathBan(it)
+            deathBanStorage.removeDeathBan(it)
         }
         plugin.server.broadcast(plugin.config.unbanAllBroadcast(allBans.size))
     }

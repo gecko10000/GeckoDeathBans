@@ -8,7 +8,7 @@ fun pluginModules(plugin: GeckoDeathBans) = module {
     single { plugin }
     single(createdAtStart = true) { BanStepTracker() }
     single(createdAtStart = true) { BanManager() }
-    single(createdAtStart = true) { WorldDeathBanStorage() }
+    single(createdAtStart = true) { DeathBanStorage() }
     single(createdAtStart = true) { RespawnTotemManager() }
     single(createdAtStart = true) { CombatLogManager() }
     single { PlainTextComponentSerializer.plainText() }
