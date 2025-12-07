@@ -1,9 +1,7 @@
 package gecko10000.geckodeathbans
 
 import gecko10000.geckodeathbans.di.MyKoinComponent
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.PlayerDeathEvent
 import org.koin.core.component.inject
 import space.arim.libertybans.api.LibertyBans
 import space.arim.libertybans.api.PlayerVictim
@@ -23,10 +21,10 @@ class BanManager : MyKoinComponent {
         .getOmnibus().registry
         .getProvider(LibertyBans::class.java)
         .orElseThrow()
-    private val plainTextComponentSerializer = PlainTextComponentSerializer.plainText()
 
-    fun banPlayer(player: Player, banDuration: Duration, deathEvent: PlayerDeathEvent?) {
-        val cause = deathEvent?.deathMessage()?.let { plainTextComponentSerializer.serialize(it) }
+    fun banPlayer(player: Player, banDuration: Duration, banCause: String?) {
+        plugin.server.broadcast(plugin.config.deathBanBroadcast(player.name, banDuration))
+        val cause = banCause
             ?: "No one knows how you died. Congrats!"
         val reason = plugin.config.banMessage.replace("<cause>", cause)
         val draftBan = libertyBans.drafter.draftBuilder()

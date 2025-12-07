@@ -11,6 +11,7 @@ import kotlinx.serialization.UseSerializers
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
@@ -40,8 +41,23 @@ data class Config(
             )
         }
     },
+    private val combatLogDeathMessage: String = "<player> logged out during combat",
+    private val deathBanBroadcast: String = "<red><player> has been death-banned for <duration>."
 ) {
     fun unbanAllBroadcast(amount: Int): Component {
         return MM.deserialize(unbanAllBroadcast, Placeholder.unparsed("amount", amount.toString()))
     }
+
+    fun combatLogDeathMessage(player: Player): Component {
+        return MM.deserialize(combatLogDeathMessage, Placeholder.unparsed("player", player.name))
+    }
+
+    fun deathBanBroadcast(playerName: String, duration: Duration): Component {
+        return MM.deserialize(
+            deathBanBroadcast,
+            Placeholder.unparsed("player", playerName),
+            Placeholder.unparsed("duration", duration.toString())
+        )
+    }
+
 }

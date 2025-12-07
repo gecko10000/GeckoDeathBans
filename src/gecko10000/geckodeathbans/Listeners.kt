@@ -2,6 +2,7 @@ package gecko10000.geckodeathbans
 
 import gecko10000.geckodeathbans.di.MyKoinComponent
 import gecko10000.geckolib.misc.Task
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.EntityEffect
 import org.bukkit.GameRule
 import org.bukkit.World
@@ -15,7 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.world.WorldLoadEvent
 import org.koin.core.component.inject
 import java.util.*
-import kotlin.math.min
 
 class Listeners : Listener, MyKoinComponent {
 
@@ -24,6 +24,8 @@ class Listeners : Listener, MyKoinComponent {
     private val banManager: BanManager by inject()
     private val worldDeathBanStorage: WorldDeathBanStorage by inject()
     private val respawnTotemManager: RespawnTotemManager by inject()
+    private val combatLogManager: CombatLogManager by inject()
+    private val plainTextComponentSerializer: PlainTextComponentSerializer by inject()
 
     private val respawnTotemUsers = mutableSetOf<UUID>()
 
@@ -66,20 +68,19 @@ class Listeners : Listener, MyKoinComponent {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private fun PlayerDeathEvent.onPlayerDeath() {
-        if (player.hasPermission("geckodeathbans.bypass")) {
+        if (player.hasPermission("geckodeathbans.bypass.ban")) {
             return
         }
         if (respawnTotemUsers.contains(player.uniqueId)) {
             player.playEffect(EntityEffect.PROTECTED_FROM_DEATH)
             return
         }
-        val lastBanStep = plugin.config.banTimes.size - 1
-        val storedBanStep = banStepTracker.getBanStep(player)
-        val actualBanStep = min(storedBanStep, lastBanStep)
-        val nextBanStep = min(actualBanStep + 1, plugin.config.banTimes.size - 1)
-        banStepTracker.setBanStep(player, nextBanStep)
-        val banDuration = plugin.config.banTimes[actualBanStep]
-        banManager.banPlayer(player, banDuration, this)
+        if (combatLogManager.isBeingKilledForCombatLogging(player)) {
+            deathMessage(plugin.config.combatLogDeathMessage(player))
+            return
+        }
+        val banCause = this.deathMessage()?.let { plainTextComponentSerializer.serialize(it) }
+        Task.syncDelayed { -> banManager.banPlayer(player, banStepTracker.stepBanDuration(player), banCause) }
     }
 
 }

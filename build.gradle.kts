@@ -24,7 +24,7 @@ bukkit {
     name = "GeckoDeathBans"
     main = "$group.$name"
     apiVersion = "1.13"
-    depend = listOf("GeckoLib", "LibertyBans")
+    depend = listOf("GeckoLib", "LibertyBans", "CMI")
 }
 
 repositories {
@@ -32,6 +32,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://eldonexus.de/repository/maven-public/")
+    maven("https://jitpack.io")
 
     maven("https://mvn-repo.arim.space/lesser-gpl3/")
     maven("https://mvn-repo.arim.space/gpl3/")
@@ -43,9 +44,11 @@ dependencies {
     compileOnly(kotlin("stdlib", version = "2.2.0"))
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
     compileOnly("gecko10000.geckolib:GeckoLib:1.1")
-    compileOnly("net.strokkur", "strokk-commands-annotations", "1.2.4-SNAPSHOT")
+    compileOnly("net.strokkur", "commands-annotations", "1.5.0")
+    kapt("net.strokkur", "commands-processor", "1.5.0")
+
     compileOnly("space.arim.libertybans:bans-api:1.1.2")
-    kapt("net.strokkur", "strokk-commands-processor", "1.2.4-SNAPSHOT")
+    compileOnly("com.github.Zrips:CMI-API:9.7.14.3")
 }
 
 kotlin {
