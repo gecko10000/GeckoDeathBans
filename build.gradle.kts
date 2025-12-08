@@ -23,7 +23,7 @@ bukkit {
     name = "GeckoDeathBans"
     main = "$group.$name"
     apiVersion = "1.13"
-    depend = listOf("GeckoLib", "LibertyBans", "CMI", "PlaceholderAPI")
+    depend = listOf("GeckoLib", "LibertyBans", "CMI", "PlaceholderAPI", "Vault")
 }
 
 repositories {
@@ -49,6 +49,7 @@ dependencies {
     compileOnly("space.arim.libertybans:bans-api:1.1.2")
     compileOnly("com.github.Zrips:CMI-API:9.7.14.3")
     compileOnly("me.clip:placeholderapi:2.11.7")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 }
 
 kotlin {

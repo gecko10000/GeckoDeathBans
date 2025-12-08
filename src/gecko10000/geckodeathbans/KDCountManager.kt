@@ -4,6 +4,7 @@ import com.Zrips.CMI.events.CMIPvPEndEventAsync
 import com.Zrips.CMI.events.CMIPvPStartEventAsync
 import gecko10000.geckodeathbans.di.MyKoinComponent
 import gecko10000.geckolib.misc.Task
+import net.milkbowl.vault.economy.Economy
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -20,6 +21,7 @@ class KDCountManager : Listener, MyKoinComponent {
     }
 
     private val plugin: GeckoDeathBans by inject()
+    private val economy: Economy by inject()
 
     private val killsKey = NamespacedKey(plugin, "kills")
     private val deathsKey = NamespacedKey(plugin, "deaths")
@@ -37,11 +39,15 @@ class KDCountManager : Listener, MyKoinComponent {
 
     /**
      * Increments statistics for both the victim (death)
-     * and for the killer (kill)
+     * and for the killer (kill). Also gives the killer
+     * reward money.
      */
-    fun incrementStats(victim: Player) {
+    fun logKill(victim: Player) {
         incrementPDC(victim, deathsKey)
-        getKiller(victim)?.let { incrementPDC(it, killsKey) }
+        getKiller(victim)?.let {
+            incrementPDC(it, killsKey)
+            economy.depositPlayer(it, plugin.config.killReward)
+        }
     }
 
     private fun getInt(player: Player, key: NamespacedKey) =

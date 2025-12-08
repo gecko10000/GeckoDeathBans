@@ -25,7 +25,7 @@ class BanManager : MyKoinComponent {
 
     fun banPlayer(player: Player, banDuration: Duration, banCause: String?) {
         plugin.server.broadcast(plugin.config.deathBanBroadcast(player.name, banDuration))
-        kdCountManager.incrementStats(player)
+        kdCountManager.logKill(player)
         val cause = banCause
             ?: "No one knows how you died. Congrats!"
         val reason = plugin.config.banMessage.replace("<cause>", cause)

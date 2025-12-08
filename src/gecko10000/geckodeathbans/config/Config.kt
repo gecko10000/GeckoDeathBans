@@ -42,7 +42,8 @@ data class Config(
         }
     },
     private val combatLogDeathMessage: String = "<player> logged out during combat",
-    private val deathBanBroadcast: String = "<red><player> has been death-banned for <duration>."
+    private val deathBanBroadcast: String = "<red><player> has been death-banned for <duration>.",
+    val killReward: Double = 1000.0,
 ) {
     fun unbanAllBroadcast(amount: Int): Component {
         return MM.deserialize(unbanAllBroadcast, Placeholder.unparsed("amount", amount.toString()))
