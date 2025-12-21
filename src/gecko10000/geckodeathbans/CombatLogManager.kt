@@ -27,10 +27,14 @@ class CombatLogManager : Listener, MyKoinComponent {
 
     @EventHandler
     private fun PlayerQuitEvent.onQuit() {
+        // Prevent bans for other disconnects.
+        // May need to be revisited if players abuse timing out.
+        if (reason != PlayerQuitEvent.QuitReason.DISCONNECTED) return
         if (player.hasPermission("geckodeathbans.bypass.combatlogkill")) {
             return
         }
         val inCombat = CMI.getInstance().playerCombatManager.isInCombatWithPlayer(player.uniqueId)
+                || player.hasPermission("geckodeathbans.banonleave")
         if (!inCombat) {
             return
         }
