@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityResurrectEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.world.WorldLoadEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.koin.core.component.inject
 import java.util.*
 
@@ -75,12 +76,31 @@ class Listeners : Listener, MyKoinComponent {
             player.playEffect(EntityEffect.PROTECTED_FROM_DEATH)
             return
         }
+        val totemSlot = player.hasTotem()
+        // Player has totem but is in a situation where
+        // the totem would not ordinarily activate (did not
+        // activate via the EntityResurrectEvent).
+        // For example, falling into the void or dying via /kill.
+        if (totemSlot != null) {
+            player.inventory.setItem(totemSlot, player.inventory.getItem(totemSlot).subtract(1))
+            player.playEffect(EntityEffect.PROTECTED_FROM_DEATH)
+            return
+        }
         if (combatLogManager.isBeingKilledForCombatLogging(player)) {
             deathMessage(plugin.config.combatLogDeathMessage(player))
             return
         }
         val banCause = this.deathMessage()?.let { plainTextComponentSerializer.serialize(it) }
         Task.syncDelayed { -> banManager.banPlayer(player, banStepTracker.stepBanDuration(player), banCause) }
+    }
+
+    private fun Player.hasTotem(): EquipmentSlot? {
+        for (slot in listOf(EquipmentSlot.HAND, EquipmentSlot.OFF_HAND)) {
+            if (respawnTotemManager.isTotemItem(this.inventory.getItem(slot))) {
+                return slot
+            }
+        }
+        return null
     }
 
 }
